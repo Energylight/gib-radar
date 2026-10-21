@@ -1,0 +1,57 @@
+$ python3 -m gib_radar.cli scan --pages 1 --limit 50
+fetched 5, stored 5, scored 5 (platform total: 5)
+
+$ python3 -m gib_radar.cli top --limit 5
+ 1. [0.937] Gibwork Developer Hackathon Bounty
+    $1000 USDC · 12 submissions · 2026-10-30T04:00:00.000Z
+    pays $1000 | 12 submissions | 8.7d left | matches: development, backend, frontend, cli, sdk, mcp
+    id: 1052f22d-3f87-4b1d-b0d7-71a60679e7fa
+ 2. [0.454]  Share Your Side of BASIS Pick ONE Theme
+    $150 USDC · 203 submissions · 2026-10-24T00:00:00.000Z
+    pays $150 | 203 submissions | 2.5d left | matches: bot
+    id: e2575247-1d22-4157-9885-6e52ac5dab36
+ 3. [0.386] Create a UGC Video Bounty for the Gibwork Mobile App
+    $300 USDC · 48 submissions · 2026-10-30T04:00:00.000Z
+    pays $300 | 48 submissions | 8.7d left | no skill match
+    id: 5f073804-bb43-49c9-99c0-3fb498180465
+ 4. [0.334] Play Turnfolk - Earn $5 for honest feedback
+    $100 USDC · 96 submissions · 2026-10-30T23:00:00.000Z
+    pays $100 | 96/20 slots taken | 9.5d left | no skill match
+    id: 2e57bb40-daca-4c81-9056-e78902dd07f6
+ 5. [0.297] Create an X Thread About the Gibwork Mobile App Bounty
+    $200 CREDITS · 51 submissions · 2026-11-27T05:00:00.000Z
+    pays $200 | 51 submissions | 37d left | no skill match
+    id: d321ae8f-34f0-4c2f-b6ef-af7773d096ba
+
+$ python3 -m gib_radar.cli show 1052f22d-3f87-4b1d-b0d7-71a60679e7fa
+Gibwork Developer Hackathon Bounty
+id:         1052f22d-3f87-4b1d-b0d7-71a60679e7fa
+pays:       $1000 USDC (min 50.0)
+deadline:   2026-10-30T04:00:00.000Z
+submissions:12 of ∞
+tags:       ["Development"]
+score:      0.937 — pays $1000 | 12 submissions | 8.7d left | matches: development, backend, frontend, cli, sdk, mcp
+
+Join this Gibwork Developer Hackathon bounty to create a new non-web-app use case for Gibwork using the SDK, CLI, or MCP.
+This bounty is focused on practical developer workflows, automations, integrations, or tooling that demonstrate a compelling way Gibwork can be used outside of traditional web applications.
+Bounty Description
+The selected participants will be responsible for:
+Designing and building a new Gibwork bounty use case that uses the SDK, CLI, or MCP in a meaningful and functional way.
+Focusing this bounty on non-web-app development, such as developer tooling, automation flows, terminal-based utilities, AI agent integrations, backend workflows, local productivity tools, or other creative bounty concepts.
+Implementing a working prototype that clearly shows how the bounty use case works, what problem it solves, and how Gibwork is integrated.
+Documenting the bounty solution so another developer can understand the setup, usage flow, and expected output.
+Providing a short demo of the completed bounty build, including the core workflow and successful execution.
+Requirements
+The bounty must use Gibwork SDK, CLI, or MCP as a core part of the implementation.
+The bounty must be a new use case, not a minor variation of an existing demo.
+The bounty must not be a web app, frontend dashboard, or browser-based product.
+The bounty should solve a real developer, operations, automation, research, or workflow problem with a clear practical outcome.
+The bounty submission must include 
+
+$ printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"radar_top","arguments":{"limit":2}}}' | python3 -m gib_radar.mcp_server
+{"jsonrpc": "2.0", "id": 1, "result": {"content": [{"type": "text", "text": "{\n  \"count\": 2,\n  \"tasks\": [\n    {\n      \"id\": \"1052f22d-3f87-4b1d-b0d7-71a60679e7fa\",\n      \"title\": \"Gibwork Developer Hackathon Bounty\",\n      \"score\": 0.9368,\n      \"amount\": 1000.0,\n      \"token\": \"USDC\",\n      \"deadline\": \"2026-10-30T04:00:00.000Z\",\n      \"submissions\": 12,\n      \"max_submissions\": null,\n      \"tags\": [\n        \"Development\"\n      ],\n      \"reasons\": [\n        \"pays $1000\",\n        \"12 submissions\",\n        \"8.7d left\",\n        \"matches: development, backend, frontend, cli, sdk, mcp\"\n      ]\n    },\n    {\n      \"id\": \"e2575247-1d22-4157-9885-6e52ac5dab36\",\n      \"title\": \" Share Your Side of BASIS Pick ONE Theme\",\n      \"score\": 0.4543,\n      \"amount\": 150.0,\n      \"token\": \"USDC\",\n      \"deadline\": \"2026-10-24T00:00:00.000Z\",\n      \"submissions\": 203,\n      \"max_submissions\": null,\n      \"tags\": [\n        \"Social Media\"\n      ],\n      \"reasons\": [\n        \"pays $150\",\n        \"203 submissions\",\n        \"2.5d left\",\n        \"matches: bot\"\n      ]\n    }\n  ]\n}"}], "isError": false}}
+
+$ python3 -m pytest -q
+.....................                                                    [100%]
+21 passed in 0.06s
+

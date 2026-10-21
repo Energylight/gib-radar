@@ -11,7 +11,8 @@ def sample_task(**overrides):
         "content": "<p>Fix <strong>this</strong> bug</p>",
         "tags": ["Development"],
         "asset": {"symbol": "USDC", "amount": "10000000", "decimals": 6},
-        "minSubmissionAmount": "5000000",
+        # Gibwork sends the minimum in human units, unlike asset.amount
+        "minSubmissionAmount": "5",
         "deadline": "2026-10-30T00:00:00.000Z",
         "totalSubmissions": 3,
         "maxSubmissions": 10,
@@ -29,6 +30,18 @@ def test_normalise_scales_lamports_to_units():
     assert row["min_submission"] == 5.0
     assert row["is_open"] == 1
     assert "<p>" not in row["content"]
+
+
+def test_minimum_is_not_scaled_by_decimals(tmp_path):
+    # Regression: dividing minSubmissionAmount by 10**decimals turned a $50
+    # minimum into $0.00005.
+    row = normalise(sample_task(minSubmissionAmount="50"))
+    assert row["min_submission"] == 50.0
+
+
+def test_block_tags_become_line_breaks():
+    row = normalise(sample_task(content="<p>First.</p><p>Second.</p>"))
+    assert row["content"] == "First.\nSecond."
 
 
 def test_upsert_counts_repeat_sightings(tmp_path):

@@ -28,6 +28,7 @@ def build_config(args: argparse.Namespace) -> Config:
         "db_path": Path(args.db).expanduser() if getattr(args, "db", None) else None,
         "profile": getattr(args, "profile", None),
         "environment": getattr(args, "environment", None),
+        "keypair": Path(args.keypair).expanduser() if getattr(args, "keypair", None) else None,
     })
     extra = load_skills_file(Path(args.skills).expanduser()) if getattr(args, "skills", None) else []
     if extra:
@@ -46,7 +47,8 @@ def weights_of(cfg: Config) -> dict[str, float]:
 
 def collect(cfg: Config, pages: int, limit: int) -> dict[str, Any]:
     """Pull `pages` pages from the CLI and persist them. Returns a report."""
-    client = GibworkClient(cfg.gibwork_bin, cfg.profile, cfg.environment)
+    client = GibworkClient(cfg.gibwork_bin, cfg.profile, cfg.environment,
+                           keypair=cfg.keypair)
     store = Store(cfg.db_path)
     seen: list[dict[str, Any]] = []
     total = 0
@@ -202,6 +204,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--db", help="SQLite path (default ~/.local/share/gib-radar/radar.db)")
     p.add_argument("--profile", help="Gibwork CLI profile (stage/production)")
     p.add_argument("--environment", help="Gibwork CLI environment")
+    p.add_argument("--keypair", help="path to a keypair file (needed for production reads)")
     p.add_argument("--skills", help="extra skills file (one per line or a JSON array)")
     sub = p.add_subparsers(dest="command", required=True)
 

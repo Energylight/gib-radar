@@ -123,7 +123,7 @@ gib_radar/
   store.py       SQLite: history, raw snapshots, latest scores
   cli.py         scan / top / show / watch / config
   mcp_server.py  stdio MCP server, four tools
-tests/           19 tests, no network, no CLI required
+tests/           21 tests, no network, no CLI required
 demo/demo.sh     a scripted tour for the hackathon video
 ```
 

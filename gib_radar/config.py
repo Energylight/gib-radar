@@ -52,6 +52,10 @@ class Config:
     environment: str = field(
         default_factory=lambda: os.environ.get("GIB_RADAR_ENV", "stage"))
     gibwork_bin: str = field(default_factory=lambda: os.environ.get("GIB_RADAR_GIBWORK", "gibwork"))
+    # Optional: a path to a keypair file. The CLI needs one to talk to
+    # production; the radar only passes the path along and never reads it.
+    keypair: str | None = field(
+        default_factory=lambda: os.environ.get("GIB_RADAR_KEYPAIR") or None)
     skills: list[str] = field(default_factory=lambda: list(DEFAULT_SKILLS))
 
     # Scoring weights. Exposed so a user can say "I care about money more
@@ -76,6 +80,7 @@ class Config:
             "profile": self.profile,
             "environment": self.environment,
             "gibwork_bin": self.gibwork_bin,
+            "keypair": self.keypair or "(profile default)",
             "weights": {
                 "pay": self.weight_pay,
                 "competition": self.weight_competition,

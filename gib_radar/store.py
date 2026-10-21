@@ -164,6 +164,9 @@ def normalise(task: dict[str, Any]) -> dict[str, Any]:
     decimals = int(asset.get("decimals") or 0)
     raw_amount = asset.get("amount")
     amount = _scaled(raw_amount, decimals)
+    # NOTE: minSubmissionAmount arrives in human units ("50" = $50), while
+    # asset.amount arrives in base units and must be scaled by decimals.
+    # Mixing the two conventions turned a $50 minimum into $0.00005.
     min_raw = task.get("minSubmissionAmount")
     tags = task.get("tags") or []
     return {
@@ -174,7 +177,7 @@ def normalise(task: dict[str, Any]) -> dict[str, Any]:
         "tags": json.dumps(tags, ensure_ascii=False),
         "token": asset.get("symbol") or asset.get("mintAddress"),
         "amount": amount,
-        "min_submission": _scaled(min_raw, decimals),
+        "min_submission": _plain(min_raw),
         "deadline": task.get("deadline"),
         "submissions": int(task.get("totalSubmissions") or 0),
         "max_submissions": task.get("maxSubmissions"),
@@ -183,6 +186,16 @@ def normalise(task: dict[str, Any]) -> dict[str, Any]:
         "created_at": task.get("createdAt"),
         "raw": json.dumps(task, ensure_ascii=False),
     }
+
+
+def _plain(value: Any) -> float | None:
+    """A number that is already in human units."""
+    if value is None or value == "":
+        return None
+    try:
+        return round(float(value), 6)
+    except (TypeError, ValueError):
+        return None
 
 
 def _scaled(value: Any, decimals: int) -> float | None:
@@ -197,8 +210,19 @@ def _scaled(value: Any, decimals: int) -> float | None:
     return round(number, 6)
 
 
+BLOCK_TAGS = ("</p>", "</li>", "</h1>", "</h2>", "</h3>", "</h4>",
+              "<br>", "<br/>", "<br />", "</div>", "</tr>")
+
+
 def _strip_html(text: str) -> str:
-    """Cheap tag strip: enough for search and previews, not a renderer."""
+    """Cheap tag strip with paragraph breaks: enough for search and previews.
+
+    Dropping tags without inserting a break glued sentences together
+    ("...web applications.Bounty DescriptionThe selected participants..."),
+    which made `show` unreadable even though the text was all there.
+    """
+    for tag in BLOCK_TAGS:
+        text = text.replace(tag, "\n")
     out, depth = [], 0
     for ch in text:
         if ch == "<":
@@ -207,4 +231,5 @@ def _strip_html(text: str) -> str:
             depth = max(0, depth - 1)
         elif depth == 0:
             out.append(ch)
-    return "".join(out).strip()
+    lines = [" ".join(line.split()) for line in "".join(out).splitlines()]
+    return "\n".join(line for line in lines if line).strip()

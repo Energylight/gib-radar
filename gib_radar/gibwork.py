@@ -32,11 +32,13 @@ class CliResult:
 
 class GibworkClient:
     def __init__(self, binary: str = "gibwork", profile: str = "stage",
-                 environment: str = "stage", timeout: int = 60) -> None:
+                 environment: str = "stage", timeout: int = 60,
+                 keypair: str | None = None) -> None:
         self.binary = binary
         self.profile = profile
         self.environment = environment
         self.timeout = timeout
+        self.keypair = keypair
 
     def available(self) -> bool:
         """True when the CLI is on PATH and answers --version."""
@@ -88,6 +90,8 @@ class GibworkClient:
     def _run(self, argv: list[str], json_mode: bool = True) -> str:
         cmd = [self.binary, "--profile", self.profile,
                "--environment", self.environment]
+        if self.keypair:
+            cmd.extend(["--keypair", self.keypair])
         if json_mode:
             cmd.append("--json")
         cmd.extend(argv)
