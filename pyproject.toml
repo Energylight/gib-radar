@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gib-radar"
+version = "0.1.0"
+description = "Terminal radar for Gibwork bounties: collect, score, rank, and serve them to coding agents over MCP."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Roma (Starfire)" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+gib-radar = "gib_radar.cli:main"
+gib-radar-mcp = "gib_radar.mcp_server:main"
+
+[tool.setuptools.packages.find]
+include = ["gib_radar*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
