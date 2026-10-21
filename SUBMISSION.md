@@ -148,8 +148,12 @@ export GIB_RADAR_KEYPAIR=~/.config/gibwork/stage-id.json
 gib-radar scan && gib-radar top
 ```
 
-Demo regeneration: `bash demo/record.sh` — runs the real commands, captures a
-transcript, renders the still and the video.
+Demo regeneration: `bash demo/record.sh` runs the real commands and captures the
+transcript; `python3 demo/explain.py` renders the still and the 50-second video
+from it. Every line on screen comes from that transcript — the video adds a
+title, a stated problem, four labelled steps (collect → score → read → serve an
+agent) and a real stdio MCP session, and nothing else. Pacing and colour are
+editorial; the numbers are not.
 
 ## 10. Roadmap
 
